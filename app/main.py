@@ -3,7 +3,6 @@ from app.ship import Ship
 
 class Battleship:
     def __init__(self, ships: list[tuple]) -> None:
-
         self.ships = [Ship(ship_tuple[0], ship_tuple[1])
                       for ship_tuple in ships]
 
@@ -20,7 +19,6 @@ class Battleship:
             for ship_other in self.ships:
                 if ship is not ship_other:
                     assert ship != ship_other
-
 
     def fire(self, location: tuple) -> str:
         for ship in self.ships:

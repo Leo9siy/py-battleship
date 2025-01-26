@@ -23,7 +23,7 @@ class Ship:
 
         self.is_drowned = is_drowned
 
-    def get_length(self):
+    def get_length(self) -> int:
         return len(self.decks)
 
     def get_deck(self, row: int, column: int) -> Deck | None:
@@ -45,7 +45,7 @@ class Ship:
             return "Sunk!"
         return "Already dead"
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: any) -> bool:
         if self.start[0] <= other.start[0] and self.start[1] >= other.start[1]:
             if self.end[0] >= other.start[0] and self.end[1] <= other.end[1]:
                 return True
