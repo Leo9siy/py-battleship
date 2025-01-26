@@ -1,46 +1,26 @@
-class Deck:
-    def __init__(self, row: int, column: int, is_alive: bool = True) -> None:
-        self.row = row
-        self.column = column
-        self.is_alive = is_alive
-
-
-class Ship:
-    def __init__(self, start: tuple, end: tuple,
-                 is_drowned: bool = False) -> None:
-        if start[0] == end[0]:
-            self.decks = [Deck(start[0], y)
-                          for y in range(start[1], end[1] + 1)]
-        else:
-            self.decks = [Deck(x, start[1])
-                          for x in range(start[0], end[0] + 1)]
-
-        self.is_drowned = is_drowned
-
-    def get_deck(self, row: int, column: int) -> Deck | None:
-        for deck in self.decks:
-            if deck.row == row and deck.column == column:
-                return deck
-        return None
-
-    def fire(self, row: int, column: int) -> str:
-        deck = self.get_deck(row, column)
-        if deck.is_alive:
-            deck.is_alive = False
-
-            for deck in self.decks:
-                if deck.is_alive:
-                    return "Hit!"
-
-            self.is_drowned = True
-            return "Sunk!"
-        return "Already dead"
+from app.ship import Ship
 
 
 class Battleship:
     def __init__(self, ships: list[tuple]) -> None:
+
         self.ships = [Ship(ship_tuple[0], ship_tuple[1])
                       for ship_tuple in ships]
+
+    def _validate_field(self) -> None:
+        assert len(self.ships) == 10
+
+        sizes = {1: 0, 2: 0, 3: 0, 4: 0}
+        for ship in self.ships:
+            sizes[ship.get_length()] += 1
+
+        assert sizes == {1: 4, 2: 3, 3: 2, 4: 1}
+
+        for ship in self.ships:
+            for ship_other in self.ships:
+                if ship is not ship_other:
+                    assert ship != ship_other
+
 
     def fire(self, location: tuple) -> str:
         for ship in self.ships:
@@ -55,13 +35,13 @@ class Battleship:
                     return "x"
                 else:
                     if ship.get_deck(row, column).is_alive:
-                        return "□"
+                        return u"\u25A1"
                     return "*"
         return "~"
 
     def print_field(self) -> None:
-        for x_cord in range(11):
+        for x_cord in range(10):
             line = ""
-            for y_cord in range(11):
+            for y_cord in range(10):
                 line += self.check_ship(x_cord, y_cord) + " "
             print(line)
